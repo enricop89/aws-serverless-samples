@@ -1,0 +1,19 @@
+service: upload-to-s3-from-lambda
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+
+  # you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+      Resource:
+        - "arn:aws:s3:::${file(config.json):S3_BUCKET_NAME}/*"
+
+functions:
+  hello:
+    handler: handler.uploadFn

@@ -1,0 +1,60 @@
+service: dynamodb-basic-operations
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+
+  stage: ${file(config.json):STAGE}
+  region: ${file(config.json):REGION}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:GetItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${file(config.json):DYNAMODB_TABLE}"
+
+functions:
+  saveItem:
+    handler: functions/handler.saveItem
+    events:
+      - http:
+          path: item
+          method: post
+  getItem:
+    handler: functions/handler.getItem
+    events:
+      - http:
+          path: item/{itemId}
+          method: get
+  deleteItem:
+    handler: functions/handler.deleteItem
+    events:
+        - http:
+            path: item/{itemId}
+            method: delete
+  updateItem:
+    handler: functions/handler.updateItem
+    events:
+      - http:
+          path: item/{itemId}
+          method: put
+resources:
+  Resources:
+    BasicOperationsTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+        - AttributeName: "itemId"
+          AttributeType: "S"
+        KeySchema:
+        - AttributeName: "itemId"
+          KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${file(config.json):DYNAMODB_TABLE}

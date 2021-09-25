@@ -1,0 +1,23 @@
+{
+  "name": "dynamodb-basic-operations",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enricop89/dynamodb-basic-operations.git"
+  },
+  "author": "Enrico Portolan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/enricop89/dynamodb-basic-operations/issues"
+  },
+  "homepage": "https://github.com/enricop89/dynamodb-basic-operations#readme"
+}
