@@ -1,0 +1,22 @@
+{
+  "name": "s3-signed-url",
+  "version": "1.0.0",
+  "description": "s3 signed url example",
+  "main": "functions/handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "aws",
+    "s3",
+    "signed-url"
+  ],
+  "author": "Enrico Portolan",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.34.0",
+    "@aws-sdk/s3-presigned-post": "^3.34.0",
+    "@aws-sdk/s3-request-presigner": "^3.34.0",
+    "aws-sdk": "^2.999.0"
+  }
+}

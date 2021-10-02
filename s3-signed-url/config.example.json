@@ -1,0 +1,5 @@
+{
+    "REGION": "us-east-1",
+    "STAGE": "dev",
+    "S3_BUCKET": "BasicS3Bucket"
+  }

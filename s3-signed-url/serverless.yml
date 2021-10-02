@@ -1,0 +1,38 @@
+service: s3-signed-url
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: ${file(config.json):STAGE}
+  region: ${file(config.json):REGION}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:GetObject"
+        - "s3:GetObjectVersion"
+        - "s3:PutObject"
+      Resource:
+        - "arn:aws:s3:::${file(config.json):S3_BUCKET}/*"
+
+
+functions:
+  create-get-url:
+    handler: functions/handler.createGetUrl
+    events:
+      - http:
+          path: /object/{fileKey}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                fileKey: true 
+  create-post-url:
+    handler: functions/handler.createPostUrl
+    events:
+      - http:
+          path: /upload-url
+          method: get
+          cors: true      
