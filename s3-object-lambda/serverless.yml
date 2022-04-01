@@ -1,0 +1,52 @@
+org: enricop89
+app: s3-object-lambda
+service: s3-object-lambda
+
+frameworkVersion: '3'
+
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: ${file(config.json):STAGE}
+  region: ${file(config.json):REGION}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3-object-lambda:WriteGetObjectResponse
+          Resource: "*" 
+
+functions:
+  addWatermark:
+    handler: functions/add-watermark.handler
+    description: lamba function to add watermark on images
+
+resources:
+  Resources:
+    bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${file(config.json):S3_BUCKET}
+
+    bucketAccessPoint:
+      Type: AWS::S3::AccessPoint
+      Properties:
+        Bucket: !Ref bucket
+        Name: s3-access-point-image-watermark
+
+    lambdaAccessPoint:
+      Type: AWS::S3ObjectLambda::AccessPoint
+      Properties:
+        Name: s3-lambda-access-point-image-watermark
+        ObjectLambdaConfiguration:
+          CloudWatchMetricsEnabled: true
+          SupportingAccessPoint: !Sub arn:aws:s3:${AWS::Region}:${AWS::AccountId}:accesspoint/s3-access-point-image-watermark
+
+          TransformationConfigurations:
+            - Actions: ["GetObject"]
+              ContentTransformation:
+                AwsLambda:
+                  FunctionArn: !GetAtt AddWatermarkLambdaFunction.Arn
