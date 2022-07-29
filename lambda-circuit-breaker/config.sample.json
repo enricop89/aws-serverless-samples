@@ -1,0 +1,7 @@
+{
+    "REGION": "eu-west-2",
+    "STAGE": "dev",
+    "DYNAMODB_TABLE": "NexmoIntercomIntegration",
+    "ERROR_THRESHOLD": 5,
+    "CLEAR_ERROR_TIMEOUT": 30
+  }

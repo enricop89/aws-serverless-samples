@@ -1,0 +1,14 @@
+service: lambda-function-url-tutorial
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${file(config.json):STAGE}
+  region: ${file(config.json):REGION}
+
+functions:
+  lambda-function-url:
+    handler: handler.hello
+    url:
+      cors: true

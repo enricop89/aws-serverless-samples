@@ -1,0 +1,68 @@
+service: lambda-circuit-breaker
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: ${file(config.json):STAGE}
+  region: ${file(config.json):REGION}
+  iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:GetItem"
+          - "dynamodb:Query"
+          - "dynamodb:PutItem"
+          - "dynamodb:UpdateItem"
+          - "dynamodb:DeleteItem"
+        Resource:
+          - "arn:aws:dynamodb:${self:provider.region}:*:table/${file(config.json):DYNAMODB_TABLE}"
+      - Effect: "Allow"
+        Action:
+          - "events:Put*"
+        Resource:
+          - "arn:aws:events:${self:provider.region}:*:event-bus/default" 
+
+functions:
+  circuit-breaker:
+    handler: functions/circuit-breaker.handler
+    events:
+      - httpApi:
+          path: /call-api
+          method: post
+  circuit-breaker-error:
+    handler: functions/circuit-breaker-error.handler
+    events:
+      - eventBridge:
+          pattern:
+            source:
+              - eventbridge.circuit-breaker
+            # detail-type:
+            #   - httpcallerror
+            # detail:
+            #   eventSource:
+            #     - eventbridge.circuit-breaker
+            #   status:
+            #     - fail
+
+resources:
+ Resources:
+   ErrorTracker:
+     Type: AWS::DynamoDB::Table
+     Properties:
+        AttributeDefinitions:
+        - AttributeName: "PK"
+          AttributeType: "S"
+        - AttributeName: "SK"
+          AttributeType: "N"  
+        KeySchema:
+        - AttributeName: "PK"
+          KeyType: "HASH"
+        - AttributeName: "SK"
+          KeyType: "RANGE"  
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TimeToLiveSpecification:
+          AttributeName: 'TTL'
+          Enabled: true  
+        TableName: ${file(config.json):DYNAMODB_TABLE}
