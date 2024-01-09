@@ -1,0 +1,5 @@
+{
+  "JWKS_URI": "https://[your-subdomain].eu.auth0.com/.well-known/jwks.json",
+  "ISSUER": "https://[your-subdomain].eu.auth0.com/",
+  "AUDIENCE": "https://api-identifer"
+}

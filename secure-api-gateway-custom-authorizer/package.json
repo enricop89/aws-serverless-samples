@@ -1,0 +1,23 @@
+{
+  "name": "secure-api-gateway-custom-authorizer",
+  "version": "0.1.0",
+  "bin": {
+    "secure-api-gateway-custom-authorizer": "bin/secure-api-gateway-custom-authorizer.js"
+  },
+  "scripts": {
+    "build": "echo \"The build step is not required when using JavaScript!\" && exit 0",
+    "cdk": "cdk",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "aws-cdk": "2.110.1",
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.110.1",
+    "constructs": "^10.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0",
+    "util": "^0.12.5"
+  }
+}
